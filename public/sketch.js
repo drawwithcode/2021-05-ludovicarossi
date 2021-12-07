@@ -1,5 +1,13 @@
 //CLIENT-SIDE
 
+//defining background variable
+let myImage;
+
+//preparing background image
+function preload() {
+  myImage = loadImage("./assets/stanza.png");
+}
+
 //activating the socket library
 let clientSocket = io();
 
@@ -18,16 +26,26 @@ clientSocket.on("mouseBroadcast", newBroadcast);
 //defining newBroadcast function
 function newBroadcast(data) {
   console.log(data);
-  stroke("red");
+  stroke("black");
   line(data.px, data.py, data.x, data.y);
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(220);
+  backgroundImage(myImage);
 }
 
 function draw() {}
+
+//background image function
+function backgroundImage(img) {
+  push();
+  translate(width / 2, height / 2);
+  imageMode(CENTER);
+  let scale = Math.max(width / img.width, height / img.height);
+  image(img, 0, 0, img.width * scale, img.height * scale);
+  pop();
+}
 
 //sending to the server every mouse position
 function mouseDragged() {
@@ -41,6 +59,6 @@ function mouseDragged() {
 
   //sending the message, from client to server
   clientSocket.emit("mouse", message);
-  stroke("yellow");
+  stroke("black");
   line(pmouseX, pmouseY, mouseX, mouseY);
 }
