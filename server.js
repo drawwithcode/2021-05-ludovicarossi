@@ -3,6 +3,8 @@
 //testing on terminal
 console.log("up and running");
 
+//express
+
 //loading express library into a variable
 let express = require("express");
 
@@ -21,13 +23,16 @@ console.log("Server is running on http://localhost:" + port);
 //using public folder to send (static) files
 app.use(express.static("public"));
 
-//introducing socket library
+//socket
+
+//loading socket library into a variable
 let serverSocket = require("socket.io");
 
-//creating object for incoming&outcoming messages
+//creating object for incoming & outcoming messages
+//activating socket library and running it on the server
 let io = serverSocket(server);
 
-//attaching code that will be executed when someone connects to the server
+//running newConnection function when a new connection is made
 io.on("connection", newConnection);
 
 //defining the newConnection function
@@ -35,4 +40,15 @@ io.on("connection", newConnection);
 function newConnection(newSocket) {
   //printing the unique id of every client connection
   console.log(newSocket.id);
+
+  //running mouseMessage function when receiving the "mouse" message
+  newSocket.on("mouse", mouseMessage);
+
+  //defining the mouseMessage function
+  function mouseMessage(dataReceived) {
+    console.log(dataReceived);
+
+    //sending "mouse" message to all the other clients
+    newSocket.broadcast.emit("mouseBroadcast", dataReceived);
+  }
 }
