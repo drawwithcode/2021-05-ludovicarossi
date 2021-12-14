@@ -5,7 +5,6 @@ let lines = [];
 //creating variables
 let penColor;
 let penThickness;
-let clearButton;
 
 //defining background variable
 let myImage;
@@ -33,12 +32,28 @@ clientSocket.on("mouseBroadcast", newBroadcast);
 //defining newBroadcast function
 function newBroadcast(data) {
   console.log(data);
-  drawLine(data.px, data.py, data.x, data.y, data.color, data.thickness);
+  drawLine(
+    data.px * width,
+    data.py * height,
+    data.x * width,
+    data.y * height,
+    data.color,
+    data.thickness
+  );
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight - 80);
+  createCanvas(windowWidth, windowHeight * 0.8);
   backgroundImage(myImage);
+  textAlign(CENTER);
+  textSize(20);
+  textFont("Fuzzy Bubbles");
+  textStyle(BOLD);
+  text(
+    "A room for everybody. No rules. Let your imagination run wild!",
+    1000 / 2,
+    50
+  );
 
   //line options to choose from
   //creating div element for options
@@ -53,7 +68,7 @@ function setup() {
   //organizing values with style method (plain CSS)
   let optionsValues = createDiv()
     .parent(options)
-    .style("margin:10px 50px; width: 40px");
+    .style("margin:10px 40px; width: 40px");
   //adding values
   penColor = createColorPicker("#000000").parent(optionsValues);
   //using a select element for pen thickness (drop-down menu, only 1 option to choose)
@@ -85,10 +100,10 @@ function backgroundImage(img) {
 function mouseDragged() {
   //type of message to send
   let message = {
-    x: mouseX,
-    y: mouseY,
-    px: pmouseX,
-    py: pmouseY,
+    x: mouseX / width,
+    y: mouseY / height,
+    px: pmouseX / width,
+    py: pmouseY / height,
     color: penColor.value(),
     thickness: penThickness.value(),
   };
