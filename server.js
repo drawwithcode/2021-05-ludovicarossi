@@ -12,7 +12,7 @@ let express = require("express");
 let app = express();
 
 //defining a port
-let port = 3000;
+let port = process.env.PORT || 3000;
 
 //activating the application; variable containing the running instances of the server
 let server = app.listen(port);
